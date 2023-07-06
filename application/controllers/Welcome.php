@@ -1,62 +1,137 @@
 <?php
 
-defined('BASEPATH') or exit('No direct script access allowed');
+declare(strict_types=1);
 
-use Jenssegers\Blade\Blade;
+use Phoenix\Database\Element\Index;
+use Phoenix\Migration\AbstractMigration;
 
-class Welcome extends CI_Controller
+final class FirstInit extends AbstractMigration
 {
-    /**
-     * Index Page for this controller.
-     *
-     * Maps to the following URL
-     * 		http://example.com/index.php/welcome
-     *	- or -
-     * 		http://example.com/index.php/welcome/index
-     *	- or -
-     * Since this controller is set as the default controller in
-     * config/routes.php, it's displayed at http://example.com/
-     *
-     * So any other public methods not prefixed with an underscore will
-     * map to /index.php/welcome/<method_name>
-     * @see https://codeigniter.com/userguide3/general/urls.html
-     */
-    private $_blade;
-
-    // create construct
-    public function __construct()
+    protected function up(): void
     {
-        parent::__construct();
-        $this->_blade = new Blade(VIEWPATH, APPPATH . 'cache');
+        $this->table('user')
+            ->addColumn('id', 'integer', ['autoincrement' => true])
+            ->addColumn('username', 'string')
+            ->addColumn('email', 'string')
+            ->addColumn('created_at', 'datetime')
+            ->addColumn('updated_at', 'datetime', ['null' => true])
+            ->addIndex('username', Index::TYPE_UNIQUE)
+            ->addIndex('email', Index::TYPE_UNIQUE)
+            ->create();
+
+        $this->table('post')
+            ->addColumn('id', 'integer', ['autoincrement' => true])
+            ->addColumn('user_id', 'integer')
+            ->addColumn('article', 'string')
+            ->addColumn('jenis', 'string')
+            ->addColumn('created_at', 'datetime')
+            ->addColumn('updated_at', 'datetime', ['null' => true])
+            ->addForeignKey('user_id', 'user', 'id', 'restrict', 'no action')
+            ->create();
+
+        $this->insert('user', [
+            [
+                'username' => 'luffy',
+                'email' => 'luffy@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'zorro',
+                'email' => 'zorro@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'sanji',
+                'email' => 'sanji@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'nami',
+                'email' => 'nami@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'franky',
+                'email' => 'franky@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+        ]);
     }
 
-    private function _createView($view, $data)
+    protected function down(): void
     {
-        echo $this->_blade->make($view, $data)->render();
-    }
+        $this->table('post')
+            ->drop();
 
-    public function index()
-    {
-        $this->_createView('form', []);
-    }
-
-    public function simpan()
-    {
-        $this->_createView('simpan', []);
-    }
-
-    public function hapus()
-    {
-        $this->_createView('hapus', []);
-    }
-
-    public function ubah()
-    {
-        $this->_createView('update', []);
-    }
-
-    public function tampil()
-    {
-        $this->_createView('tampil', []);
-    }
+        $this->table('user')
+            ->drop();
+    }
 }
+}<?php
+
+declare(strict_types=1);
+
+use Phoenix\Database\Element\Index;
+use Phoenix\Migration\AbstractMigration;
+
+final class FirstInit extends AbstractMigration
+{
+    protected function up(): void
+    {
+        $this->table('user')
+            ->addColumn('id', 'integer', ['autoincrement' => true])
+            ->addColumn('username', 'string')
+            ->addColumn('email', 'string')
+            ->addColumn('created_at', 'datetime')
+            ->addColumn('updated_at', 'datetime', ['null' => true])
+            ->addIndex('username', Index::TYPE_UNIQUE)
+            ->addIndex('email', Index::TYPE_UNIQUE)
+            ->create();
+
+        $this->table('post')
+            ->addColumn('id', 'integer', ['autoincrement' => true])
+            ->addColumn('user_id', 'integer')
+            ->addColumn('article', 'string')
+            ->addColumn('jenis', 'string')
+            ->addColumn('created_at', 'datetime')
+            ->addColumn('updated_at', 'datetime', ['null' => true])
+            ->addForeignKey('user_id', 'user', 'id', 'restrict', 'no action')
+            ->create();
+
+        $this->insert('user', [
+            [
+                'username' => 'luffy',
+                'email' => 'luffy@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'zorro',
+                'email' => 'zorro@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'sanji',
+                'email' => 'sanji@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'nami',
+                'email' => 'nami@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+            [
+                'username' => 'franky',
+                'email' => 'franky@pirate.com',
+                'created_at' => date('Y-m-d'),
+            ],
+        ]);
+    }
+
+    protected function down(): void
+    {
+        $this->table('post')
+            ->drop();
+
+        $this->table('user')
+            ->drop();
+    }}
