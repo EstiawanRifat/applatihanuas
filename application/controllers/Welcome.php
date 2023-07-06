@@ -134,4 +134,5 @@ final class FirstInit extends AbstractMigration
 
         $this->table('user')
             ->drop();
-    }}
+    }
+}
